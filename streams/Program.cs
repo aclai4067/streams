@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace streams
 {
@@ -28,6 +29,27 @@ namespace streams
             var newJsonFileName = Path.Combine(directory.FullName, "paperlessUsers.json");
             SerializeUsersToFile(paperlessUsers, newJsonFileName);
 
+
+
+            //Console.WriteLine(GetGoogleHomePage());
+
+            List<NewsResults> newsResults = GetNews("healthcare");
+            SentimentResponse sentimentResponse = GetSentimentResponse(newsResults);
+            foreach (var s in sentimentResponse.SentimentDocument)
+            {
+                foreach (var r in newsResults)
+                {
+                    if (r.Headline == s.id)
+                    {
+                        r.SentimentScore = (double)s.confidenceScores.positive;
+                        break;
+                    }
+                }
+            }
+            foreach (var result in newsResults)
+            {
+                Console.WriteLine(string.Format("Sentiment Score: {0:P}, Date: {1:f}, Headline: {2},\r Summary: {3} \r\n", result.SentimentScore, result.DatePublished, result.Headline, result.Summary));
+            }
 
             // --- get file list ---
             //var files = directory.GetFiles("*.txt");
@@ -126,6 +148,55 @@ namespace streams
             {
                 serializer.Serialize(jsonWriter, users);
             }
+        }
+
+        public static string GetGoogleHomePage()
+        {
+            var webClient = new WebClient();
+            byte[] googleHome = webClient.DownloadData("https://www.google.com");
+
+            using (var stream = new MemoryStream(googleHome))
+            using(var reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        public static List<NewsResults> GetNews(string searchCategory)
+        {
+            var results = new List<NewsResults>();
+            var webClient = new WebClient();
+            webClient.Headers.Add("Ocp-Apim-Subscription-Key", "");
+            byte[] searchResults = webClient.DownloadData(string.Format("https://api.cognitive.microsoft.com/bing/v7.0/news/search?q={0}&mkt=en-us", searchCategory));
+            var serializer = new JsonSerializer();
+            using (var stream = new MemoryStream(searchResults))
+            using (var reader = new StreamReader(stream))
+            using (var jsonReader = new JsonTextReader(reader))
+            {
+                results = serializer.Deserialize<NewsSearch>(jsonReader).NewsResults;
+            }
+            return results;
+        }
+
+        public static SentimentResponse GetSentimentResponse(List<NewsResults> newsResults)
+        {
+            var sentimentResponse = new SentimentResponse();
+            var sentimentRequest = new SentimentRequest();
+            sentimentRequest.Documents = new List<Document>();
+            foreach (var result in newsResults)
+            {
+                sentimentRequest.Documents.Add(new Document { Id = result.Headline, Text = result.Summary });
+            }
+            var webClient = new WebClient();
+            webClient.Headers.Add("Ocp-Apim-Subscription-Key", "");
+            webClient.Headers.Add(HttpRequestHeader.Accept, "application/json");
+            webClient.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+            string requestJson = JsonConvert.SerializeObject(sentimentRequest);
+            byte[] requestBytes = Encoding.UTF8.GetBytes(requestJson);
+            byte[] response = webClient.UploadData("https://(customSubDomain).cognitiveservices.azure.com/text/analytics/v3.0/sentiment", requestBytes);
+            string sentiments = Encoding.UTF8.GetString(response);
+            sentimentResponse = JsonConvert.DeserializeObject<SentimentResponse>(sentiments);
+            return sentimentResponse;
         }
     }
 }
