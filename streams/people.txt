@@ -1,6 +1,6 @@
-﻿FirstName,LastName,AccountNumber,Address1,Address2,City,State,Zip
-Ashley,Claiborne,00000001,100 Lebanon Pk,Apt B,Nashville,TN,37210
-John,Doe,00000002,123 Main St,,Atlanta,GA,30303
-Sarah,Smith,00000003,999 Hipster Rd,suite 4,Nashville,TN,37207
-Eric,Erickson,00000004,555 Some Ave,,Lilburn,GA,30247
-Patricia,Parker,00000005,321 Round Cir,,Bogart,GA,30622
+﻿FirstName,LastName,AccountNumber,Address1,Address2,City,State,Zip,Charges,Payments
+Ashley,Claiborne,00000001,100 Lebanon Pk,Apt B,Nashville,TN,37210,10.00,0.00
+John,Doe,00000002,123 Main St,,Atlanta,GA,30303,456.98,300.00
+Sarah,Smith,00000003,999 Hipster Rd,suite 4,Nashville,TN,37207,0.00,10.00
+Eric,Erickson,00000004,555 Some Ave,,Lilburn,GA,30247,12.70,12.70
+Patricia,Parker,00000005,321 Round Cir,,Bogart,GA,30622,30299.19,5000.00
