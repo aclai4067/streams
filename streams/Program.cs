@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace streams
 {
@@ -15,6 +16,17 @@ namespace streams
             DirectoryInfo directory = new DirectoryInfo(currentDirectory);
             var fileName = Path.Combine(directory.FullName, "people.txt");
             var fileContents = ReadAcctLines(fileName);
+
+            var jsonFileName = Path.Combine(directory.FullName, "users.json");
+            var users = DeserializeUers(jsonFileName);
+            var paperlessUsers = getPaperlessUsers(users);
+            foreach (var u in paperlessUsers)
+            {
+                Console.WriteLine($"Electronic billing is enabled for account {u.AccountNumber}");
+            }
+
+            var newJsonFileName = Path.Combine(directory.FullName, "paperlessUsers.json");
+            SerializeUsersToFile(paperlessUsers, newJsonFileName);
 
 
             // --- get file list ---
@@ -87,6 +99,33 @@ namespace streams
             }
 
             return accounts;
+        }
+
+        public static List<User> DeserializeUers(string fileName)
+        {
+            var users = new List<User>();
+            var serializer = new JsonSerializer();
+            using (var reader = new StreamReader(fileName))
+            using (var jsonReader = new JsonTextReader(reader))
+            {
+                users = serializer.Deserialize<List<User>>(jsonReader);
+            }
+            return users;
+        }
+
+        public static List<User> getPaperlessUsers(List<User> users)
+        {
+            return users.FindAll(u => u.isPaperless == true);
+        }
+
+        public static void SerializeUsersToFile(List<User> users, string fileName)
+        {
+            var serializer = new JsonSerializer();
+            using (var writer = new StreamWriter(fileName))
+            using (var jsonWriter = new JsonTextWriter(writer))
+            {
+                serializer.Serialize(jsonWriter, users);
+            }
         }
     }
 }

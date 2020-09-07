@@ -1,0 +1,37 @@
+[
+  {
+    "AccountNumber": "00000001",
+    "UserName": "aclaiborne",
+    "Email": "ashley@email.com",
+    "LastLogin": "2020-09-06",
+    "Paperless": true
+  },
+  {
+    "AccountNumber": "00000002",
+    "UserName": "johnj",
+    "Email": "john@email.com",
+    "LastLogin": "2020-09-01",
+    "Paperless": true
+  },
+  {
+    "AccountNumber": "00000003",
+    "UserName": "ssmith",
+    "Email": "sara@email.com",
+    "LastLogin": "2020-08-06",
+    "Paperless": false
+  },
+  {
+    "AccountNumber": "00000004",
+    "UserName": "edawgerickson",
+    "Email": "edawg@email.com",
+    "LastLogin": "2019-12-16",
+    "Paperless": true
+  },
+  {
+    "AccountNumber": "00000005",
+    "UserName": "pparker",
+    "Email": "pat@email.com",
+    "LastLogin": "2020-05-25",
+    "Paperless": false
+  }
+]
