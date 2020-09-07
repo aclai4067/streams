@@ -1,0 +1,6 @@
+﻿FirstName,LastName,AccountNumber,Address1,Address2,City,State,Zip
+Ashley,Claiborne,00000001,100 Lebanon Pk,Apt B,Nashville,TN,37210
+John,Doe,00000002,123 Main St,,Atlanta,GA,30303
+Sarah,Smith,00000003,999 Hipster Rd,suite 4,Nashville,TN,37207
+Eric,Erickson,00000004,555 Some Ave,,Lilburn,GA,30247
+Patricia,Parker,00000005,321 Round Cir,,Bogart,GA,30622
